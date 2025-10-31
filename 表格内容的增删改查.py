@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 """
 # 读取 Excel 文件
 df = pd.read_excel('data.xlsx', engine='openpyxl')
@@ -163,3 +164,47 @@ for i in df_read.index:
     print(f"第{i+1}行数据：")
     print(f"姓名：{df_read['姓名'][i]}，年龄：{df_read['年龄'][i]}，班级：{df_read['班级'][i]}，成绩：{df_read['成绩'][i]}")
     """
+# 整合为总列表（嵌套列表）
+pvc_xlpe = [
+    [0.5, 0.6, "-"],
+    [0.75, 0.6, 0.6],
+    [1.0, 0.6, 0.6],
+    [1.5, 0.7, 0.6],
+    [2.5, 0.8, 0.7],
+    [4, 0.8, 0.7],
+    [6, 0.8, 0.7],
+    [10, 1.0, 0.7]
+]
+
+
+
+GYK_read=pd.read_excel("GB-T-9330-2020kvvr工艺卡.xlsx",engine="openpyxl")
+BC_NAME=GYK_read["标称截面mm2"]
+bc_name_number_num_sum=[]
+#提取标称截面中的数值部分
+JY=GYK_read["绝缘"]
+jy_B=GYK_read["标"]
+jy_b=GYK_read["薄"]
+
+
+JY_list=[]
+jy_B_list=[]
+jy_b_list=[]
+
+
+for i in BC_NAME:
+    bc_name_number_str_mid=re.findall(r'\d+\.?\d*',i)
+    bc_name_number_num=[float(x)if'.' in x else int(x) for x in bc_name_number_str_mid]
+    bc_name_number_num_sum.append(bc_name_number_num)
+
+
+for i in bc_name_number_num_sum:
+    for j in i:
+        for k in pvc_xlpe:
+            if j[1]==k[0]:
+                JY_list.append(k[1])
+                jy_B_list.append(k[1])
+                jy_b_list.append(k[1])
+
+
+
